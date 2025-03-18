@@ -1,0 +1,35 @@
+import pandas as pd
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score,confusion_matrix
+
+
+df=pd.read_csv('iris_csv.csv')
+df.head()
+
+df.shape
+
+x_train, x_test, y_train, y_test = train_test_split(df.iloc[:,:4], df.iloc[:,4],test_size=0.3, random_state=4)
+
+
+x_train.shape
+
+
+scaler=StandardScaler()
+x_train=scaler.fit_transform(x_train)
+x_test=scaler.transform(x_test)
+
+x_train
+
+knn=KNeighborsClassifier(n_neighbors=4)
+knn.fit(x_train,y_train)
+
+
+y_pred=knn.predict(x_test)
+accuracy_score(y_test,y_pred)
+
+
+cm=confusion_matrix(y_test,y_pred)
+sns.heatmap(cm,annot=True)

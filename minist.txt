@@ -1,0 +1,74 @@
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import cross_val_score,cross_val_predict
+from sklearn.datasets import fetch_openml
+from sklearn.metrics import accuracy_score,confusion_matrix
+
+
+mnist_digits = fetch_openml('mnist_784', version=1)
+mnist_digits.keys()
+
+
+x = mnist_digits["data"]
+y = mnist_digits["target"]
+
+x.shape,y.shape
+
+
+
+
+sample_a = x.loc[[8]].to_numpy()
+sample_b = x.loc[[30]].to_numpy()
+
+sample_a_img = sample_a.reshape(28, 28)
+sample_b_img = sample_b.reshape(28, 28)
+
+plt.imshow(sample_a_img)
+
+ 
+
+
+plt.imshow(sample_b_img)
+
+
+
+
+x_train, x_test, y_train, y_test = x[:60000], x[60000:], y[:60000], y[60000:]
+
+
+
+
+
+x_train.shape, x_test.shape, y_train.shape, y_test.shape
+
+
+
+
+
+model = SGDClassifier(random_state=42)
+model.fit(x_train, y_train) 
+
+
+
+
+y_predict = model.predict(x_test)
+accuracy_score(y_test,y_predict)
+
+
+
+
+a = cross_val_score(model, x_test, y_test, cv=3, scoring="accuracy")
+
+
+
+
+a
+
+
+
+
+y_test_pred = cross_val_predict(model, x_test, y_test, cv=3)
+c = confusion_matrix(y_test, y_test_pred)
+sns.heatmap(c, annot=True)
